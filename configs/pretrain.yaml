@@ -1,0 +1,22 @@
+seed: 42
+device: auto
+data:
+  manifest: results/audit/pretraining.jsonl
+  image_size: 224
+  num_workers: 0
+  pin_memory: false
+  drop_last: true
+model:
+  name: resnet50
+  pretrained: false
+  embedding_dim: 2048
+  projection_dim: 128
+training:
+  batch_size: 64
+  epochs: 100
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  temperature: 0.2
+  amp: true
+  output_dir: checkpoints/pretrain
+  resume: null

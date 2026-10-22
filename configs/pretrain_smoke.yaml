@@ -1,0 +1,22 @@
+seed: 42
+device: auto
+data:
+  manifest: results/smoke_test/pretraining_subset.jsonl
+  image_size: 32
+  num_workers: 0
+  pin_memory: false
+  drop_last: true
+model:
+  name: resnet50
+  pretrained: false
+  embedding_dim: 2048
+  projection_dim: 32
+training:
+  batch_size: 2
+  epochs: 1
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  temperature: 0.2
+  amp: true
+  output_dir: checkpoints/smoke_test
+  resume: null

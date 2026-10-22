@@ -1,0 +1,56 @@
+seed: 42
+device: auto
+data:
+  image_size: 224
+  batch_size: 64
+evaluation:
+  output_dir: results/evaluation
+  seeds: [42, 123, 2024]
+  label_budgets: [0.01, 0.05, 0.10, 1.0]
+  classifier_c: 1.0
+models:
+  imagenet_resnet50:
+    type: imagenet
+    imagenet_pretrained: true
+    enabled: true
+  simclr_resnet50:
+    type: simclr
+    checkpoint: checkpoints/pretrain/latest.encoder.pt
+    enabled: true
+  finetuned_imagenet:
+    type: finetuned_imagenet
+    checkpoint: null
+    enabled: false
+datasets:
+  RFMiD:
+    task: multilabel
+    train_manifest: results/audit/pretraining.jsonl
+    train_labels:
+      archive: A. RFMiD_All_Classes_Dataset.zip
+      member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/a. RFMiD_Training_Labels.csv
+      key_column: ID
+    validation_manifest: results/audit/validation.jsonl
+    validation_labels:
+      archive: A. RFMiD_All_Classes_Dataset.zip
+      member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/b. RFMiD_Validation_Labels.csv
+      key_column: ID
+    test_manifest: results/audit/final_testing_rfid.jsonl
+    test_labels:
+      archive: A. RFMiD_All_Classes_Dataset.zip
+      member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/c. RFMiD_Testing_Labels.csv
+      key_column: ID
+  IDRiD:
+    task: ordinal
+    train_manifest: results/audit/idrid_training.jsonl
+    # Replace train_manifest with an organizer-approved IDRiD adaptation manifest.
+    train_labels:
+      archive: B. Disease Grading.zip
+      member: B. Disease Grading/2. Groundtruths/a. IDRiD_Disease Grading_Training Labels.csv
+      key_column: Image name
+      target_column: Retinopathy grade
+    test_manifest: results/audit/final_testing_idrid.jsonl
+    test_labels:
+      archive: B. Disease Grading.zip
+      member: B. Disease Grading/2. Groundtruths/b. IDRiD_Disease Grading_Testing Labels.csv
+      key_column: Image name
+      target_column: Retinopathy grade

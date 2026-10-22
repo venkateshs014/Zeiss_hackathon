@@ -1,0 +1,18 @@
+seed: 42
+device: auto
+encoder_checkpoint: checkpoints/pretrain/latest.encoder.pt
+image_size: 224
+batch_size: 64
+output_dir: results/trustworthiness
+manifests:
+  in_domain: results/audit/validation.jsonl
+  ood: results/audit/final_testing_idrid.jsonl
+ood_definition: IDRiD testing is an approved unseen-dataset external-transfer group; it is not synthetic corruption.
+corruptions: [brightness, contrast, saturation, blur, resolution]
+severities: [mild, moderate]
+umap:
+  enabled: true
+  max_points: 1000
+retrieval:
+  query_count: 20
+  top_k: 5

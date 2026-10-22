@@ -1,0 +1,63 @@
+# Paths point to the supplied archives. No extraction or download is required.
+output_dir: results/audit
+assumptions:
+  - RFMiD pretraining uses RFMiD training images only; no RFMiD validation/testing images.
+  - RFMiD validation/testing and IDRiD testing are reserved for evaluation manifests.
+  - IDRiD testing is never included in the pretraining manifest.
+  - Manifest rows contain no CSV labels; CSVs are inspected only for audit/matching.
+  - Exact duplicate identity is byte SHA-256; near duplicates use a 16x16 grayscale perceptual hash.
+  - Patient identity is not inferred from filenames; organizer-provided patient grouping rules are required.
+  - Few-shot adaptation is not generated until an explicit organizer-approved ID list is supplied.
+datasets:
+  RFMiD:
+    source: A. RFMiD_All_Classes_Dataset.zip
+    split_dirs:
+      training: A. RFMiD_All_Classes_Dataset/1. Original Images/a. Training Set/
+      validation: A. RFMiD_All_Classes_Dataset/1. Original Images/b. Validation Set/
+      testing: A. RFMiD_All_Classes_Dataset/1. Original Images/c. Testing Set/
+    label_csvs:
+      - name: training_labels
+        member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/a. RFMiD_Training_Labels.csv
+        key_column: ID
+        split: training
+      - name: validation_labels
+        member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/b. RFMiD_Validation_Labels.csv
+        key_column: ID
+        split: validation
+      - name: testing_labels
+        member: A. RFMiD_All_Classes_Dataset/2. Groundtruths/c. RFMiD_Testing_Labels.csv
+        key_column: ID
+        split: testing
+  IDRiD:
+    source: B. Disease Grading.zip
+    split_dirs:
+      training: B. Disease Grading/1. Original Images/a. Training Set/
+      testing: B. Disease Grading/1. Original Images/b. Testing Set/
+    label_csvs:
+      - name: training_labels
+        member: B. Disease Grading/2. Groundtruths/a. IDRiD_Disease Grading_Training Labels.csv
+        key_column: Image name
+        split: training
+      - name: testing_labels
+        member: B. Disease Grading/2. Groundtruths/b. IDRiD_Disease Grading_Testing Labels.csv
+        key_column: Image name
+        split: testing
+manifests:
+  pretraining:
+    dataset: RFMiD
+    split: training
+  validation:
+    dataset: RFMiD
+    split: validation
+  final_testing_rfid:
+    dataset: RFMiD
+    split: testing
+  final_testing_idrid:
+    dataset: IDRiD
+    split: testing
+  idrid_training:
+    dataset: IDRiD
+    split: training
+  few_shot_adaptation:
+    type: explicit_ids
+    ids_file: null
